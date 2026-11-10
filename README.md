@@ -1,5 +1,7 @@
 # Nocturne Tarot 4.1.0 Universal
 
+[![Tests](https://github.com/feldsherikydze-dot/Nocturne-Tarot/actions/workflows/tests.yml/badge.svg)](https://github.com/feldsherikydze-dot/Nocturne-Tarot/actions/workflows/tests.yml)
+
 Локальное PWA для раскладов Таро: 78 карт, 10 раскладов, история, избранное, пользовательские схемы, экспорт/импорт и офлайн-режим. Приложение не обращается к облачному ИИ и не имеет бэкенда: трактовки считаются в браузере, данные хранятся в `localStorage` устройства.
 
 **Живая версия:** https://feldsherikydze-dot.github.io/Nocturne-Tarot/
@@ -36,6 +38,8 @@ PYTHONIOENCODING=utf-8 python3 audit-cards.py
 Ожидаемый результат: **117/117** проверок движка и интерфейса, **6/6** сценариев Service Worker, **14/14** проверок резервных копий и пользовательских схем, **78 карт, 0 ошибок, 0 предупреждений** структурного аудита.
 
 Браузерные проверки — `tests.html`; открывайте по HTTPS или через `localhost`, не через `file://`.
+
+Эти же проверки автоматически запускаются в GitHub Actions (`.github/workflows/tests.yml`) на каждый push и pull request.
 
 ## Что внутри
 

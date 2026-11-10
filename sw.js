@@ -30,7 +30,10 @@ self.addEventListener('fetch',e=>{
   };
   if(isCore){
     e.respondWith(fetch(e.request,{cache:'no-store'}).then(r=>{
-      if(r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));}
+      if(r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));return r;}
+      // A proxy or a broken upstream can answer 5xx. Prefer the precached copy
+      // over an error page, but keep real 4xx responses (e.g. a missing file) intact.
+      if(r.status>=500)return offlineFallback();
       return r;
     }).catch(offlineFallback));
     return;
