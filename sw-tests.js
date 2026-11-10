@@ -53,8 +53,8 @@ const swSandbox = { self, caches, URL, fetch: async () => { throw new Error('off
 vm.runInNewContext(source + '\nthis.__files=FILES;', swSandbox);
 async function run() {
   // The precache has the canonical key without a version query; request uses a query.
-  store.set('nocturne-tarot-v4.1.0|http://127.0.0.1:8000/app.js', new Response('/* cached app.js */', {headers:{'Content-Type':'text/javascript'}}));
-  store.set('nocturne-tarot-v4.1.0|http://127.0.0.1:8000/index.html', new Response('<!doctype html><title>cached home</title>', {headers:{'Content-Type':'text/html'}}));
+  store.set('nocturne-tarot-v4.1.0-r2|http://127.0.0.1:8000/app.js', new Response('/* cached app.js */', {headers:{'Content-Type':'text/javascript'}}));
+  store.set('nocturne-tarot-v4.1.0-r2|http://127.0.0.1:8000/index.html', new Response('<!doctype html><title>cached home</title>', {headers:{'Content-Type':'text/html'}}));
   let captured;
   const req = new Request('http://127.0.0.1:8000/app.js?v=4.1.0', {mode:'same-origin'});
   handlers.fetch({request:req, respondWith(p) { captured = p; }});
