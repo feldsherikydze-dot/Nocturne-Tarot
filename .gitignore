@@ -1,0 +1,10 @@
+# Local release artifacts
+release/
+*.zip
+*.sha256
+
+# OS / editor
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
