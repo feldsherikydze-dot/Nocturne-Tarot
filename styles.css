@@ -970,7 +970,15 @@ input[type="search"]::-webkit-search-cancel-button{filter:invert(.8)}
   background:linear-gradient(160deg,rgba(38,30,60,.6),rgba(18,14,30,.8));
   box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
 }
-.compare-heading span{color:var(--gold);font-size:24px;text-shadow:0 0 20px rgba(232,204,147,.45)}
+.compare-heading img{
+  display:block;
+  width:64px;
+  height:96px;
+  margin:0 auto 10px;
+  border-radius:8px;
+  border:1px solid rgba(232,204,147,.28);
+  box-shadow:0 10px 24px rgba(0,0,0,.45);
+}
 .compare-heading h2{font:500 23px var(--font-serif);margin:8px 0}
 .compare-heading p{font-size:9px;color:var(--muted);margin:0}
 .compare-row{padding:14px 0;border-bottom:1px solid rgba(232,204,147,.1)}
