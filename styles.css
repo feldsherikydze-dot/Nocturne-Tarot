@@ -970,6 +970,8 @@ input[type="search"]::-webkit-search-cancel-button{filter:invert(.8)}
   font:500 22px var(--font-serif);
   color:var(--cream);
 }
+.compare-panel.is-empty{margin:14px 0;padding:14px 16px}
+.compare-panel.is-empty b{font-size:19px}
 .compare-columns{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
