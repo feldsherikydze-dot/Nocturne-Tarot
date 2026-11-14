@@ -198,6 +198,8 @@ test('поиск по истории: вопрос, карта, заметка',
 
 test('история выдаётся порциями по 60',()=>{assert(/historyLimit = 60/.test(src),'нет лимита истории');assert(/shown=visible\.slice\(0,historyLimit\)/.test(src),'нет среза истории');assert(src.includes('data-action="history-more"'),'нет кнопки «Показать ещё»');assert(src.includes('case"history-more":historyLimit+=60'),'кнопка не увеличивает лимит')});
 
+test('смена экрана сбрасывает скролл, возврат в историю его восстанавливает',()=>{assert(src.includes('window.scrollTo({top:y==null?0:y,left:0,behavior:"instant"})'),'нет сброса скролла при смене экрана');assert(src.includes('pendingScrollY=historyScrollY'),'история не заказывает позицию');assert(!/requestAnimationFrame\(\(\)=>window\.scrollTo\(0,y\)\)/.test(src),'восстановление не должно зависеть от rAF: в фоновой вкладке он не срабатывает');assert(src.includes('pendingScrollY=null;view=v'),'переход стирает заказ позиции')});
+
 
 console.log(`\nИтог: ${passed} пройдено, ${failed} ошибок, всего ${passed+failed} проверок.`);
 if(failed)process.exitCode=1;
