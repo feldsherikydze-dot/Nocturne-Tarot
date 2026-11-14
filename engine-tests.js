@@ -196,6 +196,8 @@ test('склонение «карта» по числу',()=>{const m=src.match(
 
 test('поиск по истории: вопрос, карта, заметка',()=>{const m=src.match(/function readingMatches\(r,list,q\)\{[^\n]*\}/);assert(m,'нет readingMatches');const readingMatches=vm.runInNewContext(m[0]+'\nreadingMatches');const list=[{id:'major-17',name:'Звезда'}];const r={question:'Что делать?',spreadName:'Карта дня',domain:'Общая ситуация',notes:'наблюдение за неделю',realityNote:'',firstImpression:'',cards:[{cardId:'major-17'}]};assert(readingMatches(r,list,'звезда'),'карта не находится');assert(readingMatches(r,list,'НАБЛЮДЕНИЕ'),'регистр ломает поиск');assert(readingMatches(r,list,'   '),'пустой запрос');assert(!readingMatches(r,list,'луна'),'ложное совпадение')});
 
+test('история выдаётся порциями по 60',()=>{assert(/historyLimit = 60/.test(src),'нет лимита истории');assert(/shown=visible\.slice\(0,historyLimit\)/.test(src),'нет среза истории');assert(src.includes('data-action="history-more"'),'нет кнопки «Показать ещё»');assert(src.includes('case"history-more":historyLimit+=60'),'кнопка не увеличивает лимит')});
+
 
 console.log(`\nИтог: ${passed} пройдено, ${failed} ошибок, всего ${passed+failed} проверок.`);
 if(failed)process.exitCode=1;
