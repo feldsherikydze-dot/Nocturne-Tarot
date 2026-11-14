@@ -410,6 +410,9 @@ body{
   filter:drop-shadow(0 0 6px rgba(232,204,147,.32));
 }
 .spread-card .schema svg{display:block;width:72px;height:36px}
+.setup-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.setup-schema{color:var(--gold);opacity:.85;filter:drop-shadow(0 0 10px rgba(232,204,147,.22))}
+.setup-schema .schema svg{display:block;width:108px;height:54px}
 .spread-card h3{
   font:500 23px/1.05 var(--font-serif);
   margin:13px 0 6px;

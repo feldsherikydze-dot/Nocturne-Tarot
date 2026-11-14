@@ -192,5 +192,8 @@ test('придворные карты не содержат старых гра�
 
 test('chunked Base64 выдерживает 150 000 байт',()=>{const bytes=new Uint8Array(150000);for(let i=0;i<bytes.length;i++)bytes[i]=i%256;const out=b64Sandbox.bytesToBase64(bytes);assert(out.length>0,'пустой Base64');assert(Buffer.from(out,'base64').length===bytes.length,'Base64 потерял байты')});
 
+test('склонение «карта» по числу',()=>{const m=src.match(/const cardWord = n => \{[^}]*\};/);assert(m,'нет helper cardWord');const cardWord=vm.runInNewContext(m[0]+'\ncardWord');assert(cardWord(1)==='КАРТА','1');assert(cardWord(3)==='КАРТЫ','3');assert(cardWord(5)==='КАРТ','5');assert(cardWord(10)==='КАРТ','10');assert(cardWord(11)==='КАРТ','11');assert(cardWord(21)==='КАРТА','21');assert(cardWord(22)==='КАРТЫ','22');assert((src.match(/\$\{cardWord\(s\.count\)\}/g)||[]).length===2,'подписи раскладов не используют cardWord')});
+
+
 console.log(`\nИтог: ${passed} пройдено, ${failed} ошибок, всего ${passed+failed} проверок.`);
 if(failed)process.exitCode=1;
