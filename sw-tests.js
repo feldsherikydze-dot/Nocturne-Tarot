@@ -19,7 +19,8 @@ const handlers = {};
 const store = new Map();
 const deletedCaches = [];
 let precache = null;
-const cacheNames = ['nocturne-tarot-v4.2.1','nocturne-tarot-v3.2.1','nocturne-v3.2.1','unrelated-app-cache'];
+const cacheKey = source.match(/const CACHE='([^']+)'/)[1];
+const cacheNames = [cacheKey,'nocturne-tarot-v3.2.1','nocturne-v3.2.1','unrelated-app-cache'];
 const keyFor = (request) => {
   const raw = typeof request === 'string' ? request : request.url;
   const u = new URL(raw, 'http://127.0.0.1:8000');
@@ -53,8 +54,8 @@ const swSandbox = { self, caches, URL, fetch: async () => { throw new Error('off
 vm.runInNewContext(source + '\nthis.__files=FILES;', swSandbox);
 async function run() {
   // The precache has the canonical key without a version query; request uses a query.
-  store.set('nocturne-tarot-v4.2.1-r5|http://127.0.0.1:8000/app.js', new Response('/* cached app.js */', {headers:{'Content-Type':'text/javascript'}}));
-  store.set('nocturne-tarot-v4.2.1-r5|http://127.0.0.1:8000/index.html', new Response('<!doctype html><title>cached home</title>', {headers:{'Content-Type':'text/html'}}));
+  store.set(cacheKey+'|http://127.0.0.1:8000/app.js', new Response('/* cached app.js */', {headers:{'Content-Type':'text/javascript'}}));
+  store.set(cacheKey+'|http://127.0.0.1:8000/index.html', new Response('<!doctype html><title>cached home</title>', {headers:{'Content-Type':'text/html'}}));
   let captured;
   const req = new Request('http://127.0.0.1:8000/app.js?v=4.2.1', {mode:'same-origin'});
   handlers.fetch({request:req, respondWith(p) { captured = p; }});
