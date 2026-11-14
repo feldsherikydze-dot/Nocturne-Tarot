@@ -404,11 +404,12 @@ body{
   box-shadow:0 22px 48px rgba(0,0,0,.38),0 0 0 1px rgba(232,204,147,.08),var(--glow);
 }
 .spread-card:hover:after{opacity:1}
-.spread-card .glyph{
+.spread-card .schema{
+  display:block;
   color:var(--gold);
-  font-size:22px;
-  text-shadow:0 0 18px rgba(232,204,147,.4);
+  filter:drop-shadow(0 0 6px rgba(232,204,147,.32));
 }
+.spread-card .schema svg{display:block;width:72px;height:36px}
 .spread-card h3{
   font:500 23px/1.05 var(--font-serif);
   margin:13px 0 6px;
