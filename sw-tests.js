@@ -57,7 +57,7 @@ async function run() {
   store.set(cacheKey+'|http://127.0.0.1:8000/app.js', new Response('/* cached app.js */', {headers:{'Content-Type':'text/javascript'}}));
   store.set(cacheKey+'|http://127.0.0.1:8000/index.html', new Response('<!doctype html><title>cached home</title>', {headers:{'Content-Type':'text/html'}}));
   let captured;
-  const req = new Request('http://127.0.0.1:8000/app.js?v=4.2.1', {mode:'same-origin'});
+  const req = new Request('http://127.0.0.1:8000/app.js?v=4.3.0', {mode:'same-origin'});
   handlers.fetch({request:req, respondWith(p) { captured = p; }});
   const response = await captured;
   assert.strictEqual(response.status, 200, 'versioned JS should resolve to precached JS while offline');

@@ -110,7 +110,7 @@ function loadSettings(){
   }catch(e){return {}}
 }
 function saveReversedSetting(){
-  try{localStorage.setItem(SETTINGS_KEY,JSON.stringify({reversed:Boolean(reversedEnabled)}));return true}catch(e){return false}
+  try{const next=loadSettings();next.reversed=Boolean(reversedEnabled);localStorage.setItem(SETTINGS_KEY,JSON.stringify(next));return true}catch(e){return false}
 }
 let reversedEnabled=loadSettings().reversed!==false;
 
