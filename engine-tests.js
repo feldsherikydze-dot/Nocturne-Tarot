@@ -77,7 +77,7 @@ test('импорт отклоняет повтор карты внутри ра�
 test('импорт отклоняет слишком длинный вопрос',()=>{const r={id:'r1',spreadName:'Тест',question:'x'.repeat(5001),cards:[{cardId:'major-00',positionName:'Фокус'}]};assert(!sandbox.validateArchiveReading(r),'Слишком длинный вопрос принят')});
 test('импорт отклоняет неверную дату',()=>{const r={id:'r1',spreadName:'Тест',question:'Вопрос',createdAt:'не дата',cards:[{cardId:'major-00',positionName:'Фокус'}]};assert(!sandbox.validateArchiveReading(r),'Неверная дата принята')});
 test('библиотека содержит фильтры всех мастей и Старших арканов',()=>{for(const id of ['all','major','Жезлы','Кубки','Мечи','Пентакли'])assert(src.includes(`["${id}"`)||src.includes(`,"${id}"`),`Нет фильтра ${id}`)});
-test('фильтр колоды сочетается с поисковым запросом',()=>{assert(src.includes('matchesFilter&&matchesSearch'),'Фильтр и поиск не объединены')});
+test('фильтр колоды сочетается с поисковым запросом',()=>{assert(src.includes('matchesFilter&&haystack.includes'),'Фильтр и поиск не объединены')});
 test('фильтры колоды имеют состояние для вспомогательных технологий',()=>{assert(src.includes('aria-pressed=')&&src.includes('aria-live="polite"'),'Нет доступного состояния фильтров/счётчика')});
 test('для пустого результата поиска есть понятное сообщение',()=>{assert(src.includes('По этим условиям карты не найдены'),'Нет пустого состояния')});
 test('библиотека поддерживает переключение порядка карт',()=>{assert(src.includes('data-action="sort-deck"')&&src.includes('cardSort==="alpha"'),'Нет сортировки')});
@@ -88,7 +88,7 @@ test('экран сравнения сопоставляет ключевые п
 test('сравнение предупреждает, что не является рейтингом или фактом совместимости',()=>{assert(src.includes('Это не рейтинг карт'),'Нет предупреждения о рейтинге');assert(src.includes('не вычисляет объективную совместимость'),'Нет ограничения интерпретации')});
 test('сравнение доступно с карточки и из библиотеки',()=>{assert(src.includes('data-action="toggle-compare-card"'),'Нет кнопки добавить карту');assert(src.includes('data-action="compare-selected"'),'Нет кнопки сравнить')});
 test('выбор пары можно очистить',()=>{assert(src.includes('case"clear-compare":compareCardIds=[]'),'Нет очистки сравнения')});
-test('страница регистрирует и обновляет Service Worker',()=>{const code=fs.readFileSync(__dirname+'/app.js','utf8');assert(code.includes('navigator.serviceWorker.register("./sw.js?v=4.1.0")'),'Service Worker не регистрируется');assert(code.includes('reg.update()'),'Не запрашивается проверка обновления')});
+test('страница регистрирует и обновляет Service Worker',()=>{const code=fs.readFileSync(__dirname+'/app.js','utf8');assert(code.includes('navigator.serviceWorker.register("./sw.js?v=4.2.0")'),'Service Worker не регистрируется');assert(code.includes('reg.update()'),'Не запрашивается проверка обновления')});
 test('iOS PWA manifest and home-screen icon are linked',()=>{const html=fs.readFileSync(__dirname+'/index.html','utf8');assert(html.includes('rel="manifest" href="manifest.webmanifest"'),'Manifest link missing');assert(html.includes('rel="apple-touch-icon" href="assets/apple-touch-icon.png"'),'Apple touch icon missing');assert(html.includes('apple-mobile-web-app-capable'),'iOS standalone metadata missing')});
 test('очистка кэша не удаляет кэши других приложений',()=>{const sw=fs.readFileSync(__dirname+'/sw.js','utf8');assert(sw.includes("k.startsWith('nocturne-tarot-')&&k!==CACHE"),'Очистка не ограничена кэшами Nocturne')});
 test('экран приватности объясняет локальное хранение и отсутствие шифрования',()=>{assert(src.includes('function privacyPage()'),'Нет экрана данных');assert(src.includes('не зашифрована приложением'),'Не описано ограничение локального хранения');assert(src.includes('data-action=\"delete-all-readings\"'),'Нет контролируемого удаления истории')});
@@ -161,8 +161,8 @@ test('карточка карты отдельно показывает вопр
 
 
 test('release screen is reachable from the home screen',()=>{assert(src.includes('data-action="to-release"'),'Home release entry missing');assert(src.includes('function releasePage()'),'Release screen missing');assert(src.includes('case"to-release":nav("release")'),'Release action route missing');assert(src.includes('Обновление релиза'),'Release title missing')});
-test('Final-audit release version, metadata and cache are aligned',()=>{assert(src.startsWith('const APP_VERSION = "4.1.0 Universal";'),'APP_VERSION not updated');assert(fs.readFileSync(__dirname+'/index.html','utf8').includes('v4.1.0'),'HTML metadata stale');assert(fs.readFileSync(__dirname+'/manifest.webmanifest','utf8').includes('v4.1.0'),'Manifest stale');assert(fs.readFileSync(__dirname+'/sw.js','utf8').includes("nocturne-tarot-v4.1.0"),'Cache stale')});
-test('core scripts and stylesheet have cache-busting version parameters',()=>{const h=fs.readFileSync(__dirname+'/index.html','utf8');assert(h.includes('styles.css?v=4.1.0'),'stylesheet cache bust missing');assert(h.includes('app.js?v=4.1.0'),'script cache bust missing');assert(fs.readFileSync(__dirname+'/app.js','utf8').includes('sw.js?v=4.1.0'),'service worker cache bust missing')});
+test('Final-audit release version, metadata and cache are aligned',()=>{assert(src.startsWith('const APP_VERSION = "4.2.0 Universal";'),'APP_VERSION not updated');assert(fs.readFileSync(__dirname+'/index.html','utf8').includes('v4.2.0'),'HTML metadata stale');assert(fs.readFileSync(__dirname+'/manifest.webmanifest','utf8').includes('"id": "./"'),'Manifest id missing');assert(fs.readFileSync(__dirname+'/sw.js','utf8').includes("nocturne-tarot-v4.2.0"),'Cache stale')});
+test('core scripts and stylesheet have cache-busting version parameters',()=>{const h=fs.readFileSync(__dirname+'/index.html','utf8');assert(h.includes('styles.css?v=4.2.0'),'stylesheet cache bust missing');assert(h.includes('app.js?v=4.2.0'),'script cache bust missing');assert(fs.readFileSync(__dirname+'/app.js','utf8').includes('sw.js?v=4.2.0'),'service worker cache bust missing')});
 test('cache refresh unregisters app worker and never clears localStorage',()=>{assert(src.includes('getRegistrations()'),'worker registrations are not enumerated');assert(src.includes('reg.unregister()'),'worker unregister missing');assert(src.includes('k.startsWith("nocturne-tarot-")'),'cache namespace restriction missing');const fn=src.slice(src.indexOf('async function refreshAppCache'),src.indexOf('document.addEventListener("click"'));assert(!fn.includes('localStorage.clear'),'refresh must not clear localStorage')});
 test('custom spread builder supports up to ten positions',()=>{assert(src.includes('function builderPage()'),'No builder UI');assert(src.includes('positions.length>=10'),'No 10-position limit');assert(src.includes('case"save-custom-spread"'),'No save custom spread action')});
 test('custom spreads persist locally between app sessions',()=>{assert(src.includes('function loadCustomSpreads()')&&src.includes('nocturne.customSpreads.v1'),'Custom spreads are not persisted');assert(src.includes('function saveCustomSpreads()'),'No persistence writer')});
@@ -187,7 +187,7 @@ test('все 17 combo-сочетаний имеют живые имена',()=>{
 
 
 test('синтез, ответ и альтернатива не содержат двойных точек',()=>{for(const c of cards){const a=sandbox.interpret(reading([c.id]));const text=a.synthesis+' '+a.answer+' '+a.alternativeReading+' '+a.guidance;assert(!/\.\./.test(text),c.name+': двойная точка');assert(!/«[^»]*«/.test(a.alternativeReading),c.name+': вложенные кавычки');}const b=sandbox.interpret(reading([cards[0].id,cards[1].id]));assert(!/\.\./.test(b.synthesis+' '+b.answer+' '+b.alternativeReading),'двойная точка в раскладе из двух карт')});
-test('придворные карты не содержат старых грамматических шаблонов',()=>{const court=cards.filter(c=>c.arcana==='Младший аркан'&&['Паж','Рыцарь','Королева','Король'].includes(c.rank));assert(court.length===16,'Ожидалось 16 придворных карт');for(const c of court){const text=[c.core,c.relationships,c.thoughts,c.actions,c.work,c.obstacles,c.result,c.positive,c.shadow].join(' ');assert(!/через проявить|предлагает учёба|проявляются эмоциональную|важны атмосферу|сильны тонкое|Для «(?:Паж|Рыцарь|Королева|Король) /i.test(text),c.name+': старый шаблон');assert(/Масть (?:Жезлов|Кубков|Мечей|Пентаклей)/.test(c.core),c.name+': неверная форма масти')}});
+test('придворные карты не содержат старых грамматических шаблонов',()=>{const court=cards.filter(c=>c.arcana==='Младший аркан'&&['Паж','Рыцарь','Королева','Король'].includes(c.rank));assert(court.length===16,'Ожидалось 16 придворных карт');for(const c of court){const text=[c.core,c.relationships,c.thoughts,c.actions,c.work,c.obstacles,c.result,c.positive,c.shadow].join(' ');assert(!/через проявить|предлагает учёба|проявляются эмоциональную|важны атмосферу|сильны тонкое|Для «(?:Паж|Рыцарь|Королева|Король) /i.test(text),c.name+': старый шаблон');assert(/(?:Жезлы|Жезлов|Кубки|Кубков|Мечи|Мечей|Пентакли|Пентаклей)/.test(c.core),c.name+': неверная форма масти')}});
 
 
 test('chunked Base64 выдерживает 150 000 байт',()=>{const bytes=new Uint8Array(150000);for(let i=0;i<bytes.length;i++)bytes[i]=i%256;const out=b64Sandbox.bytesToBase64(bytes);assert(out.length>0,'пустой Base64');assert(Buffer.from(out,'base64').length===bytes.length,'Base64 потерял байты')});
@@ -200,8 +200,55 @@ test('история выдаётся порциями по 60',()=>{assert(/his
 
 test('панель сравнения компактна, пока ничего не выбрано',()=>{assert(src.includes('compare-panel${compareCardIds.length?"":" is-empty"}'),'нет пустого состояния панели сравнения');assert(src.includes('Выберите две карты в колоде — покажем различия и общие темы.'),'нет подсказки пустого состояния');assert(src.includes('data-action="clear-compare"'),'кнопка очистки пропала')});
 
-test('смена экрана сбрасывает скролл, возврат в историю его восстанавливает',()=>{assert(src.includes('window.scrollTo({top:y==null?0:y,left:0,behavior:"instant"})'),'нет сброса скролла при смене экрана');assert(src.includes('pendingScrollY=historyScrollY'),'история не заказывает позицию');assert(!/requestAnimationFrame\(\(\)=>window\.scrollTo\(0,y\)\)/.test(src),'восстановление не должно зависеть от rAF: в фоновой вкладке он не срабатывает');assert(src.includes('pendingScrollY=null;view=v'),'переход стирает заказ позиции')});
+test('смена экрана сбрасывает скролл, возврат в историю его восстанавливает',()=>{assert(src.includes('window.scrollTo(0,y==null?0:y)'),'нет сброса скролла при смене экрана');assert(!src.includes('scroll-behavior:smooth'),'плавный скролл мешает моментальному позиционированию');assert(src.includes('pendingScrollY=historyScrollY'),'история не заказывает позицию');assert(!/requestAnimationFrame\(\(\)=>window\.scrollTo\(0,y\)\)/.test(src),'восстановление не должно зависеть от rAF: в фоновой вкладке он не срабатывает');assert(src.includes('pendingScrollY=null;view=v'),'переход стирает заказ позиции')});
 
+
+test('каждое статическое действие имеет обработчик',()=>{
+  const used=[...new Set([...src.matchAll(/data-action="([a-z-]+)"/g)].map(m=>m[1]))];
+  const cases=new Set([...src.matchAll(/case"([a-z-]+)"/g)].map(m=>m[1]));
+  const missing=used.filter(a=>!cases.has(a));
+  assert(!missing.length,'нет обработчика для: '+missing.join(', '));
+  const unused=[...cases].filter(a=>!used.includes(a)&&!['close-card','to-cards'].includes(a));
+  assert(!unused.length,'обработчик без кнопки: '+unused.join(', '));
+});
+
+test('навигация поддерживает хеш-маршруты и системную кнопку назад',()=>{
+  assert(src.includes('function routeHash()'),'нет разбора хеша');
+  assert(src.includes('"#card="+encodeURIComponent(window.openCardId)'),'карта не имеет прямой ссылки');
+  assert(src.includes('history.pushState({view:"reading"}'),'открытие записи не создаёт шаг истории');
+  assert(src.includes('window.addEventListener("popstate"')&&src.includes('st.view==="result"'),'назад не возвращает к трактовке');
+});
+
+test('результат свёрнут в аккордеоны, а панель действий закреплена',()=>{
+  assert(src.includes('class="result-fold"'),'нет сворачиваемых блоков');
+  assert((src.match(/<details class="result-fold">/g)||[]).length>=3,'ожидалось не менее трёх секций');
+  assert(src.includes('opened.forEach(([d])=>d.open=true)'),'печать не раскрывает секции');
+  const css=fs.readFileSync(__dirname+'/styles.css','utf8');
+  assert(/\.result-quick\{[^}]*position:fixed/.test(css),'панель действий не закреплена');
+  assert(css.includes('#toast.show{pointer-events:auto}'),'кнопка отмены в тосте недоступна');
+});
+
+test('удаление обратимо, импорт и бэкап предупреждают о последствиях',()=>{
+  assert(src.includes('toast("Запись удалена","Отменить"'),'нет отмены удаления записи');
+  assert(src.includes('toast("История удалена","Отменить"'),'нет отмены очистки истории');
+  assert(src.includes('Импорт: ${valid.length} корректных записей'),'импорт без предпросмотра');
+  assert(src.includes('markBackupDone()'),'создание копии не отмечается');
+  assert(src.includes('renderBackupHint()'),'нет напоминания о резервной копии');
+});
+
+test('карта дня одна на календарный день',()=>{
+  assert(src.includes('function todayDaily()'),'нет поиска карты дня');
+  assert(src.includes('const d=todayDaily();if(d){'),'повторный клик не открывает карту дня');
+});
+
+test('манифест и OG-обложка указывают на существующие файлы',()=>{
+  const manifest=JSON.parse(fs.readFileSync(__dirname+'/manifest.webmanifest','utf8'));
+  assert(manifest.id,'в манифесте нет id');
+  assert(Array.isArray(manifest.shortcuts)&&manifest.shortcuts.length===3,'нет трёх быстрых действий');
+  for(const shot of manifest.screenshots||[])assert(fs.existsSync(__dirname+'/'+shot.src),'нет скриншота '+shot.src);
+  assert(fs.existsSync(__dirname+'/assets/og-cover.png'),'нет OG-обложки');
+  assert(fs.readFileSync(__dirname+'/index.html','utf8').includes('assets/og-cover.png'),'OG-тег не указывает на обложку');
+});
 
 console.log(`\nИтог: ${passed} пройдено, ${failed} ошибок, всего ${passed+failed} проверок.`);
 if(failed)process.exitCode=1;

@@ -1,7 +1,8 @@
 {
-  "name": "Nocturne — Таро v4.1.0",
+  "id": "./",
+  "name": "Nocturne — Таро",
   "short_name": "Nocturne Tarot",
-  "description": "Личное пространство символических раскладов Таро · версия 4.1.0",
+  "description": "78 карт, расклады, история и заметки. Локальное приложение без бэкенда и облачного ИИ.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -9,6 +10,43 @@
   "background_color": "#07060c",
   "theme_color": "#07060c",
   "lang": "ru",
+  "categories": ["lifestyle", "entertainment", "education"],
+  "shortcuts": [
+    {
+      "name": "Новый расклад",
+      "short_name": "Расклады",
+      "url": "./#spreads",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "История раскладов",
+      "short_name": "История",
+      "url": "./#history",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Библиотека карт",
+      "short_name": "Колода",
+      "url": "./#cards",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/screenshots/home.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Главный экран"
+    },
+    {
+      "src": "assets/screenshots/deck.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Библиотека карт"
+    }
+  ],
   "icons": [
     {
       "src": "assets/icon-192.png",
