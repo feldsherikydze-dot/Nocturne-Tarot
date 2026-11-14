@@ -1,4 +1,4 @@
-# Nocturne Tarot 4.2.0 Universal
+# Nocturne Tarot 4.2.1 Universal
 
 [![Tests](https://github.com/feldsherikydze-dot/Nocturne-Tarot/actions/workflows/tests.yml/badge.svg)](https://github.com/feldsherikydze-dot/Nocturne-Tarot/actions/workflows/tests.yml)
 
@@ -35,7 +35,7 @@ node data-safety-tests.js
 PYTHONIOENCODING=utf-8 python3 audit-cards.py
 ```
 
-Ожидаемый результат: **128/128** проверок движка и интерфейса, **6/6** сценариев Service Worker, **14/14** проверок резервных копий и пользовательских схем, **78 карт, 0 ошибок, 0 предупреждений** структурного аудита.
+Ожидаемый результат: **129/129** проверок движка и интерфейса, **6/6** сценариев Service Worker, **14/14** проверок резервных копий и пользовательских схем, **78 карт, 0 ошибок, 0 предупреждений** структурного аудита.
 
 Браузерные проверки — `tests.html`; открывайте по HTTPS или через `localhost`, не через `file://`.
 
@@ -60,6 +60,7 @@ PYTHONIOENCODING=utf-8 python3 audit-cards.py
 
 - `AUDIT_2026-11-14_RU.md` — проход 4.2.0: замеры до/после, что осталось за границами.
 - `AUDIT_2026-11-11_RU.md` — независимый аудит от 11.11.2026: живой браузер, XSS-пробы, GitHub Pages.
+- `CHANGELOG_4.2.1_RU.md` — патч 4.2.1: печать и установка на iOS.
 - `CHANGELOG_4.2.0_RU.md` — что изменилось в 4.2.0.
 - `CHANGELOG_4.1.0_RU.md` — что изменилось в 4.1.0.
 - `FULL_AUDIT_4.1.0_RU.md` — технический аудит и границы проверки.
