@@ -53,8 +53,8 @@ const swSandbox = { self, caches, URL, fetch: async () => { throw new Error('off
 vm.runInNewContext(source + '\nthis.__files=FILES;', swSandbox);
 async function run() {
   // The precache has the canonical key without a version query; request uses a query.
-  store.set('nocturne-tarot-v4.1.0-r2|http://127.0.0.1:8000/app.js', new Response('/* cached app.js */', {headers:{'Content-Type':'text/javascript'}}));
-  store.set('nocturne-tarot-v4.1.0-r2|http://127.0.0.1:8000/index.html', new Response('<!doctype html><title>cached home</title>', {headers:{'Content-Type':'text/html'}}));
+  store.set('nocturne-tarot-v4.1.0-r3|http://127.0.0.1:8000/app.js', new Response('/* cached app.js */', {headers:{'Content-Type':'text/javascript'}}));
+  store.set('nocturne-tarot-v4.1.0-r3|http://127.0.0.1:8000/index.html', new Response('<!doctype html><title>cached home</title>', {headers:{'Content-Type':'text/html'}}));
   let captured;
   const req = new Request('http://127.0.0.1:8000/app.js?v=4.1.0', {mode:'same-origin'});
   handlers.fetch({request:req, respondWith(p) { captured = p; }});
@@ -72,7 +72,7 @@ async function run() {
   console.log('✓ missing script returns explicit 503, not HTML');
   let nav; const navReq={url:'http://127.0.0.1:8000/?offline=1',method:'GET',mode:'navigate'}; handlers.fetch({request:navReq,respondWith(p){nav=p;}}); const navResponse=await nav; assert.strictEqual(navResponse.status,200,'offline navigation should use cached index.html'); assert.ok(/cached home/.test(await navResponse.text()),'navigation should return cached HTML'); console.log('✓ offline navigation falls back to cached index.html');
   let called=false; handlers.fetch({request:new Request('http://127.0.0.1:8000/app.js',{method:'POST'}),respondWith(){called=true;}}); assert.strictEqual(called,false,'non-GET requests should not be intercepted'); console.log('✓ non-GET requests are not intercepted');
-  let install; handlers.install({waitUntil(p){install=p;}}); await install; assert(precache && precache.length===86, 'precache must list 86 files'); const missingFiles=swSandbox.__files.filter(p=>{const clean=p.replace(/^\.\//,'');return clean && !fs.existsSync(__dirname+'/'+clean)}); assert.strictEqual(missingFiles.length,0,'missing precache files: '+missingFiles.join(', ')); console.log('✓ install precaches 86 existing files');
+  let install; handlers.install({waitUntil(p){install=p;}}); await install; assert(precache && precache.length===86, 'precache must list 86 files'); assert(precache.filter(f=>f!=='./').every(f=>f.includes('?v=')),'precache entries should bust the HTTP cache'); const missingFiles=swSandbox.__files.filter(p=>{const clean=p.replace(/^\.\//,'');return clean && !fs.existsSync(__dirname+'/'+clean)}); assert.strictEqual(missingFiles.length,0,'missing precache files: '+missingFiles.join(', ')); console.log('✓ install precaches 86 existing files');
   let activation; handlers.activate({waitUntil(p){activation=p;}}); await activation; assert(deletedCaches.includes('nocturne-tarot-v3.2.1'),'old app cache should be removed'); assert(deletedCaches.includes('nocturne-v3.2.1'),'known legacy cache should be removed'); assert(!deletedCaches.includes('unrelated-app-cache'),'unrelated cache must be preserved'); console.log('✓ activation removes old Nocturne caches but preserves unrelated app caches');
   console.log('Итог: 6 Service Worker regression tests passed.');
 }
