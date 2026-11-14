@@ -194,6 +194,8 @@ test('chunked Base64 выдерживает 150 000 байт',()=>{const bytes=n
 
 test('склонение «карта» по числу',()=>{const m=src.match(/const cardWord = n => \{[^}]*\};/);assert(m,'нет helper cardWord');const cardWord=vm.runInNewContext(m[0]+'\ncardWord');assert(cardWord(1)==='КАРТА','1');assert(cardWord(3)==='КАРТЫ','3');assert(cardWord(5)==='КАРТ','5');assert(cardWord(10)==='КАРТ','10');assert(cardWord(11)==='КАРТ','11');assert(cardWord(21)==='КАРТА','21');assert(cardWord(22)==='КАРТЫ','22');assert((src.match(/\$\{cardWord\(s\.count\)\}/g)||[]).length===2,'подписи раскладов не используют cardWord')});
 
+test('поиск по истории: вопрос, карта, заметка',()=>{const m=src.match(/function readingMatches\(r,list,q\)\{[^\n]*\}/);assert(m,'нет readingMatches');const readingMatches=vm.runInNewContext(m[0]+'\nreadingMatches');const list=[{id:'major-17',name:'Звезда'}];const r={question:'Что делать?',spreadName:'Карта дня',domain:'Общая ситуация',notes:'наблюдение за неделю',realityNote:'',firstImpression:'',cards:[{cardId:'major-17'}]};assert(readingMatches(r,list,'звезда'),'карта не находится');assert(readingMatches(r,list,'НАБЛЮДЕНИЕ'),'регистр ломает поиск');assert(readingMatches(r,list,'   '),'пустой запрос');assert(!readingMatches(r,list,'луна'),'ложное совпадение')});
+
 
 console.log(`\nИтог: ${passed} пройдено, ${failed} ошибок, всего ${passed+failed} проверок.`);
 if(failed)process.exitCode=1;

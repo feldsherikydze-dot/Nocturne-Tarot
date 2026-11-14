@@ -276,6 +276,26 @@ body{
 }
 .spread-card:hover .num{color:rgba(232,204,147,.22)}
 .grid.home-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.offline-pill{
+  margin-left:auto;
+  margin-right:8px;
+  padding:5px 9px;
+  border:1px solid rgba(232,204,147,.4);
+  border-radius:999px;
+  background:rgba(232,204,147,.08);
+  color:var(--gold);
+  font-size:9px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.history-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0 12px}
+.history-toolbar .chip{flex:none}
+.history-toolbar .small-note{margin:0 0 0 auto;text-align:right}
+.history-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+@media (max-width:400px){
+  body.is-offline .brand small{display:none}
+}
 .ornament{
   height:1px;
   background:linear-gradient(90deg,transparent,rgba(232,204,147,.75),rgba(155,123,255,.5),transparent);
