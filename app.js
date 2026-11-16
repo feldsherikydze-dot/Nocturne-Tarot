@@ -1199,9 +1199,10 @@ async function encryptedImport(){
    for(const r of valid){if(!known.has(r.id)){incoming.push(r);known.add(r.id);added++}}
    readings=incoming.concat(readings).slice(0,2000);
    const spreadResult=payload.version>=2?mergeCustomSpreads(payload.customSpreads||[]):{added:0,rejected:0};
-   const studyResult=payload.study&&validateArchiveStudy(payload.study)?mergeArchiveStudy(payload.study):{learned:0,weak:0};
+   const studyAccepted=Boolean(payload.study&&validateArchiveStudy(payload.study));
+   const studyResult=studyAccepted?mergeArchiveStudy(payload.study):{learned:0,weak:0};
    if(!saveReadings()||!saveCustomSpreads())throw new Error("Не удалось сохранить данные в браузере");
-   render();toast(`Импортировано ${added} раскладов и ${spreadResult.added} пользовательских схем; отклонено схем: ${spreadResult.rejected}; дубликаты пропущены${payload.study?`; школа: +${studyResult.learned} изученных, +${studyResult.weak} в повтор`:""}`);
+   render();toast(`Импортировано ${added} раскладов и ${spreadResult.added} пользовательских схем; отклонено схем: ${spreadResult.rejected}; дубликаты пропущены${studyAccepted?`; школа: +${studyResult.learned} изученных, +${studyResult.weak} в повтор`:""}`);
   }catch(e){
    readings=beforeReadings;spreads=beforeSpreads;studyState=beforeStudy;
    try{saveReadings();saveCustomSpreads();saveStudy()}catch(e){}
