@@ -27,7 +27,7 @@ const validateEnd = src.indexOf('\ndocument.addEventListener("change"', validate
 if (validateStart < 0 || validateEnd < 0) throw new Error('Не найдена проверка архива');
 const sandbox = { cards };
 vm.createContext(sandbox);
-vm.runInContext(reversedHelpers + '\n' + src.slice(fnStart, fnEnd) + '\nthis.interpret=interpret;this.reversedGuide=reversedGuide;this.REVERSED_MODES=REVERSED_MODES;this.orientationName=orientationName;' + '\n' + src.slice(validateStart, validateEnd) + '\nthis.validateArchiveReading=validateArchiveReading;', sandbox);
+vm.runInContext(reversedHelpers + '\n' + src.slice(fnStart, fnEnd) + '\nthis.interpret=interpret;this.reversedGuide=reversedGuide;this.REVERSED_MODES=REVERSED_MODES;this.orientationName=orientationName;' + '\n' + src.slice(validateStart, validateEnd) + '\nthis.validateArchiveReading=validateArchiveReading;this.validateArchiveStudy=validateArchiveStudy;this.mergeArchiveStudy=mergeArchiveStudy;', sandbox);
 const b64Start=src.indexOf('const bytesToBase64 =');
 const b64End=src.indexOf('\nfunction validateCustomSpread', b64Start);
 if(b64Start<0||b64End<0) throw new Error('Не найден bytesToBase64()');
@@ -93,7 +93,7 @@ test('экран сравнения сопоставляет ключевые п
 test('сравнение предупреждает, что не является рейтингом или фактом совместимости',()=>{assert(src.includes('Это не рейтинг карт'),'Нет предупреждения о рейтинге');assert(src.includes('не вычисляет объективную совместимость'),'Нет ограничения интерпретации')});
 test('сравнение доступно с карточки и из библиотеки',()=>{assert(src.includes('data-action="toggle-compare-card"'),'Нет кнопки добавить карту');assert(src.includes('data-action="compare-selected"'),'Нет кнопки сравнить')});
 test('выбор пары можно очистить',()=>{assert(src.includes('case"clear-compare":compareCardIds=[]'),'Нет очистки сравнения')});
-test('страница регистрирует и обновляет Service Worker',()=>{const code=fs.readFileSync(__dirname+'/app.js','utf8');assert(code.includes('navigator.serviceWorker.register("./sw.js?v=4.3.0")'),'Service Worker не регистрируется');assert(code.includes('reg.update()'),'Не запрашивается проверка обновления')});
+test('страница регистрирует и обновляет Service Worker',()=>{const code=fs.readFileSync(__dirname+'/app.js','utf8');assert(code.includes('navigator.serviceWorker.register("./sw.js?v=4.3.1")'),'Service Worker не регистрируется');assert(code.includes('reg.update()'),'Не запрашивается проверка обновления')});
 test('iOS PWA manifest and home-screen icon are linked',()=>{const html=fs.readFileSync(__dirname+'/index.html','utf8');assert(html.includes('rel="manifest" href="manifest.webmanifest"'),'Manifest link missing');assert(html.includes('rel="apple-touch-icon" href="assets/apple-touch-icon.png"'),'Apple touch icon missing');assert(html.includes('apple-mobile-web-app-capable'),'iOS standalone metadata missing')});
 test('очистка кэша не удаляет кэши других приложений',()=>{const sw=fs.readFileSync(__dirname+'/sw.js','utf8');assert(sw.includes("k.startsWith('nocturne-tarot-')&&k!==CACHE"),'Очистка не ограничена кэшами Nocturne')});
 test('экран приватности объясняет локальное хранение и отсутствие шифрования',()=>{assert(src.includes('function privacyPage()'),'Нет экрана данных');assert(src.includes('не зашифрована приложением'),'Не описано ограничение локального хранения');assert(src.includes('data-action=\"delete-all-readings\"'),'Нет контролируемого удаления истории')});
@@ -166,8 +166,8 @@ test('карточка карты отдельно показывает вопр
 
 
 test('release screen is reachable from the home screen',()=>{assert(src.includes('data-action="to-release"'),'Home release entry missing');assert(src.includes('function releasePage()'),'Release screen missing');assert(src.includes('case"to-release":nav("release")'),'Release action route missing');assert(src.includes('Обновление релиза'),'Release title missing')});
-test('Final-audit release version, metadata and cache are aligned',()=>{assert(src.startsWith('const APP_VERSION = "4.3.0 Universal";'),'APP_VERSION not updated');assert(fs.readFileSync(__dirname+'/index.html','utf8').includes('v4.3.0'),'HTML metadata stale');assert(fs.readFileSync(__dirname+'/manifest.webmanifest','utf8').includes('"id": "./"'),'Manifest id missing');assert(fs.readFileSync(__dirname+'/sw.js','utf8').includes("nocturne-tarot-v4.3.0"),'Cache stale')});
-test('core scripts and stylesheet have cache-busting version parameters',()=>{const h=fs.readFileSync(__dirname+'/index.html','utf8');assert(h.includes('styles.css?v=4.3.0'),'stylesheet cache bust missing');assert(h.includes('app.js?v=4.3.0'),'script cache bust missing');assert(fs.readFileSync(__dirname+'/app.js','utf8').includes('sw.js?v=4.3.0'),'service worker cache bust missing')});
+test('Final-audit release version, metadata and cache are aligned',()=>{assert(src.startsWith('const APP_VERSION = "4.3.1 Universal";'),'APP_VERSION not updated');assert(fs.readFileSync(__dirname+'/index.html','utf8').includes('v4.3.1'),'HTML metadata stale');assert(fs.readFileSync(__dirname+'/manifest.webmanifest','utf8').includes('"id": "./"'),'Manifest id missing');assert(fs.readFileSync(__dirname+'/sw.js','utf8').includes("nocturne-tarot-v4.3.1"),'Cache stale')});
+test('core scripts and stylesheet have cache-busting version parameters',()=>{const h=fs.readFileSync(__dirname+'/index.html','utf8');assert(h.includes('styles.css?v=4.3.1'),'stylesheet cache bust missing');assert(h.includes('app.js?v=4.3.1'),'script cache bust missing');assert(fs.readFileSync(__dirname+'/app.js','utf8').includes('sw.js?v=4.3.1'),'service worker cache bust missing')});
 test('cache refresh unregisters app worker and never clears localStorage',()=>{assert(src.includes('getRegistrations()'),'worker registrations are not enumerated');assert(src.includes('reg.unregister()'),'worker unregister missing');assert(src.includes('k.startsWith("nocturne-tarot-")'),'cache namespace restriction missing');const fn=src.slice(src.indexOf('async function refreshAppCache'),src.indexOf('document.addEventListener("click"'));assert(!fn.includes('localStorage.clear'),'refresh must not clear localStorage')});
 test('custom spread builder supports up to ten positions',()=>{assert(src.includes('function builderPage()'),'No builder UI');assert(src.includes('positions.length>=10'),'No 10-position limit');assert(src.includes('case"save-custom-spread"'),'No save custom spread action')});
 test('custom spreads persist locally between app sessions',()=>{assert(src.includes('function loadCustomSpreads()')&&src.includes('nocturne.customSpreads.v1'),'Custom spreads are not persisted');assert(src.includes('function saveCustomSpreads()'),'No persistence writer')});
@@ -295,6 +295,15 @@ test('экраны школы и перевёрнутых карт связан�
   assert(src.includes('data-action="add-clarifier"'),'нет добора карты');
   assert(src.includes('SUIT_META')&&src.includes('MAJOR_ASTRO'),'нет таблиц соответствий');
   assert(src.includes('\\p{L}'),'прогресс школы не переживёт кириллические id карт');
+});
+
+test('прогресс школы входит в архив версии 6 и проверяется при импорте',()=>{
+  assert(src.includes('version:6')&&src.includes('study:studyArchivePayload()'),'архив не содержит прогресс школы');
+  assert(src.includes('[1,2,3,4,5,6].includes(parsed.version)'),'импорт не принимает v6');
+  assert((src.match(/mergeArchiveStudy\(/g)||[]).length>=3,'прогресс школы не объединяется в обычном и зашифрованном импорте');
+  assert(sandbox.validateArchiveStudy({learned:['major-00'],weak:['жезлы-2'],correct:2,total:4}),'корректный прогресс отклонён');
+  assert(!sandbox.validateArchiveStudy({learned:['нет-такой-карты']}),'принята несуществующая карта');
+  assert(!sandbox.validateArchiveStudy({correct:5,total:4}),'приняты счётчики correct > total');
 });
 
 console.log(`\nИтог: ${passed} пройдено, ${failed} ошибок, всего ${passed+failed} проверок.`);
