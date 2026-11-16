@@ -13,6 +13,7 @@
 | `node data-safety-tests.js` | 14/14 |
 | `python audit-cards.py` | 78 карт, 0 ошибок, 0 предупреждений |
 | Lighthouse (локально, Chromium) | accessibility 1.0, best practices 1.0, SEO 1.0 |
+| Lighthouse (живой GitHub Pages) | accessibility 1.0, best practices 1.0, SEO 1.0 |
 
 Новые проверки движка:
 
